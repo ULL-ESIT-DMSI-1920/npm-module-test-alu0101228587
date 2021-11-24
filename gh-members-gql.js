@@ -2,27 +2,41 @@
 
 const getMemberList = (owner) => `
 query getMembers {
-  organization(login: ${owner}) {
-    membersWithRole(first: 10) {
+  organization(login: "${owner}") {
+    membersWithRole(first: 20) {
       nodes {
         name
       }
     }
   }
 }
-`
+`;
 
 const getRepoList = (owner) => `
 query getMembers {
-  organization(login: ${owner}) {
-    repositories(first: 10) {
+  organization(login: "${owner}") {
+    repositories(first: 50) {
       nodes {
         name
       }
     }
   }
 }
-`
+`;
+
+const getRepoContent = (owner, repo) => `
+query getInfo{
+  repository(owner: "${owner}", name: "${repo}") {
+    object(expression: "master:") {
+      ... on Tree {
+        entries {
+          name
+        }
+      }
+    }
+  }
+}
+`;
 
 const ins = require("util").inspect;
 const deb = (...args) => {
@@ -56,20 +70,23 @@ program.parse(process.argv);
 const { args } = program;
 var { repo, owner } = program.opts();
 
+// console.log(getMemberList("ULL-ESIT-DMSI-1920"));
+// console.log(getRepoList("ULL-ESIT-DMSI-1920"));
+
 if (!owner && args.length == 1) {
 	owner = args[0].split("/")[0];
 	var repoName = args[0].split("/")[1];
 
 	console.log(`\n-- Information of ${repoName} --`)
 
-	console.log('\n\t-> Links to files:');
-	//shell.exec(`gh api -X GET /repos/${owner}/${repoName}/contents --jq '.[] | .name, .html_url'`);
+	console.log('\n\t-> Files:');
+	shell.exec(`gh api graphql --paginate -f query='${getRepoContent(owner, repoName)}'`);
 
-	console.log('\n\t-> Branches:');
-	shell.exec(`gh api -X GET /repos/${owner}/${repoName}/branches --jq '.[] | .name'`);
+	// console.log('\n\t-> Branches:');
+	// shell.exec(`gh api -X GET /repos/${owner}/${repoName}/branches --jq '.[] | .name'`);
 
-	console.log('\n\t-> Contributors:');
-	shell.exec(`gh api -X GET /repos/${owner}/${repoName}/contributors --jq '.[].login'`)
+	// console.log('\n\t-> Contributors:');
+	// shell.exec(`gh api -X GET /repos/${owner}/${repoName}/contributors --jq '.[].login'`)
 
 	shell.exit(0);
 }else if (!owner) {
@@ -80,9 +97,9 @@ if (!owner && args.length == 1) {
 }
 
 console.log(`\n-- Members of ${owner} --\n`);
-shell.exec(`gh api -X GET /orgs/${owner}/members --jq ".[].login"`);
+shell.exec(`gh api graphql --paginate -f query='${getMemberList(owner)}' --jq ".data.organization.membersWithRole.nodes.[].name"`);
 
 if (repo) {
 	console.log(`\n-- Repositories of ${owner} --\n`);
-	shell.exec(`gh api -X GET /orgs/${owner}/repos --jq '.[].name'`);
+  shell.exec(`gh api graphql --paginate -f query='${getRepoList(owner)}' --jq ".data.organization.repositories.nodes.[].name"`);
 }
