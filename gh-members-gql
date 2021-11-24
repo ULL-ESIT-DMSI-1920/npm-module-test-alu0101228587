@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -e
+
+# Snippets to help get started:
+
+# Determine if an executable is in the PATH
+if ! type -p node >/dev/null; then
+   echo "Node not found on the system" >&2
+   exit 1
+fi
+
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
+# Pass arguments through to another command
+${SCRIPT_DIR}/gh-members-gql.js "$@"
