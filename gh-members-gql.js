@@ -1,5 +1,6 @@
 #! /usr/bin/env node
 
+//  List of members by owner
 const getMemberList = (owner) => `
 query {
   organization(login: "${owner}") {
@@ -12,6 +13,7 @@ query {
 }
 `;
 
+//  List if repositories by owner
 const getRepoList = (owner) => `
 query {
   organization(login: "${owner}") {
@@ -24,6 +26,7 @@ query {
 }
 `;
 
+//  List of files by repository
 const getRepoContent = (owner, repo) => `
 query {
   repository(owner: "${owner}", name: "${repo}") {
@@ -38,6 +41,7 @@ query {
 }
 `;
 
+//  List of branches by repository
 const getRepoBranches = (owner, repo) => `
 query {
   repository(owner: "${owner}", name: "${repo}") {
@@ -81,9 +85,6 @@ program.parse(process.argv);
 
 const { args } = program;
 var { repo, owner } = program.opts();
-
-// console.log(getMemberList("ULL-ESIT-DMSI-1920"));
-// console.log(getRepoList("ULL-ESIT-DMSI-1920"));
 
 if (!owner && args.length == 1) {
 	owner = args[0].split("/")[0];
