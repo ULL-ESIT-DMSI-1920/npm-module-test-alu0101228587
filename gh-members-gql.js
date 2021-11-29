@@ -1,7 +1,7 @@
 #! /usr/bin/env node
 
 const getMemberList = (owner) => `
-query getMembers {
+query {
   organization(login: "${owner}") {
     membersWithRole(first: 20) {
       nodes {
@@ -13,7 +13,7 @@ query getMembers {
 `;
 
 const getRepoList = (owner) => `
-query getMembers {
+query {
   organization(login: "${owner}") {
     repositories(first: 50) {
       nodes {
@@ -25,13 +25,25 @@ query getMembers {
 `;
 
 const getRepoContent = (owner, repo) => `
-query getInfo{
+query {
   repository(owner: "${owner}", name: "${repo}") {
     object(expression: "master:") {
       ... on Tree {
         entries {
           name
         }
+      }
+    }
+  }
+}
+`;
+
+const getRepoBranches = (owner, repo) => `
+query {
+  repository(owner: "${owner}", name: "${repo}") {
+    refs(first: 10, refPrefix: "refs/heads/") {
+      nodes {
+        name
       }
     }
   }
@@ -80,16 +92,13 @@ if (!owner && args.length == 1) {
 	console.log(`\n-- Information of ${repoName} --`)
 
 	console.log('\n\t-> Files:');
-	shell.exec(`gh api graphql --paginate -f query='${getRepoContent(owner, repoName)}'`);
+	shell.exec(`gh api graphql --paginate -f query='${getRepoContent(owner, repoName)}' --jq '.data.repository.object.entries.[].name'`);
 
-	// console.log('\n\t-> Branches:');
-	// shell.exec(`gh api -X GET /repos/${owner}/${repoName}/branches --jq '.[] | .name'`);
-
-	// console.log('\n\t-> Contributors:');
-	// shell.exec(`gh api -X GET /repos/${owner}/${repoName}/contributors --jq '.[].login'`)
+	console.log('\n\t-> Branches:');
+	shell.exec(`gh api graphql --paginate -f query='${getRepoBranches(owner, repoName)}' --jq '.data.repository.refs.nodes.[].name'`);
 
 	shell.exit(0);
-}else if (!owner) {
+} else if (!owner) {
 	console.log("Owner not specified. Sending help...");
 
 	program.help();
