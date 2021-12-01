@@ -1,59 +1,5 @@
 #! /usr/bin/env node
 
-//  List of members by owner
-const getMemberList = (owner) => `
-query {
-  organization(login: "${owner}") {
-    membersWithRole(first: 20) {
-      nodes {
-        name
-      }
-    }
-  }
-}
-`;
-
-//  List if repositories by owner
-const getRepoList = (owner) => `
-query {
-  organization(login: "${owner}") {
-    repositories(first: 50) {
-      nodes {
-        name
-      }
-    }
-  }
-}
-`;
-
-//  List of files by repository
-const getRepoContent = (owner, repo) => `
-query {
-  repository(owner: "${owner}", name: "${repo}") {
-    object(expression: "master:") {
-      ... on Tree {
-        entries {
-          name
-        }
-      }
-    }
-  }
-}
-`;
-
-//  List of branches by repository
-const getRepoBranches = (owner, repo) => `
-query {
-  repository(owner: "${owner}", name: "${repo}") {
-    refs(first: 10, refPrefix: "refs/heads/") {
-      nodes {
-        name
-      }
-    }
-  }
-}
-`;
-
 const ins = require("util").inspect;
 const deb = (...args) => {
 	if (debug) console.log(ins(...args, { depth: null }));
@@ -63,6 +9,7 @@ const fs = require("fs");
 const shell = require('shelljs');
 const { Command } = require('commander');
 const program = new Command();
+const {getRepoInfo, getOrgMembers} = require('./members');
 
 const config = require('./package.json');
 
@@ -86,30 +33,13 @@ program.parse(process.argv);
 const { args } = program;
 var { repo, owner } = program.opts();
 
-if (!owner && args.length == 1) {
-	owner = args[0].split("/")[0];
-	var repoName = args[0].split("/")[1];
+if (!owner && args.length == 1) getRepoInfo(args[0]);
 
-	console.log(`\n-- Information of ${repoName} --`)
-
-	console.log('\n\t-> Files:');
-	shell.exec(`gh api graphql --paginate -f query='${getRepoContent(owner, repoName)}' --jq '.data.repository.object.entries.[].name'`);
-
-	console.log('\n\t-> Branches:');
-	shell.exec(`gh api graphql --paginate -f query='${getRepoBranches(owner, repoName)}' --jq '.data.repository.refs.nodes.[].name'`);
-
-	shell.exit(0);
-} else if (!owner) {
+else if (!owner) {
 	console.log("Owner not specified. Sending help...");
 
 	program.help();
 	shell.exit(1);
 }
 
-console.log(`\n-- Members of ${owner} --\n`);
-shell.exec(`gh api graphql --paginate -f query='${getMemberList(owner)}' --jq ".data.organization.membersWithRole.nodes.[].name"`);
-
-if (repo) {
-	console.log(`\n-- Repositories of ${owner} --\n`);
-  shell.exec(`gh api graphql --paginate -f query='${getRepoList(owner)}' --jq ".data.organization.repositories.nodes.[].name"`);
-}
+getOrgMembers(owner, repo);
