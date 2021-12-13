@@ -45,6 +45,9 @@ You also can use this module as a library, as it is exporting two functions:
 
 * **getOrgMembers(orgName, repo)**: Prints a list of members of a given organization, and if the _repo_ flag is on it also prints a list of repositories of said organization.
 
+```js
+const {getRepoInfo, getOrgMembers} = require('@alu0101228587/gh-members');
+```
 
 ### **Special error messages**
 
