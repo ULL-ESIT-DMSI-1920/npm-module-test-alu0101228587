@@ -11,7 +11,7 @@ This GitHub extension, given an owner, provides a list of members of thr organiz
 
 **With gh api installed**, just execute _gh extension install alu0101228587/gh-members_ in your command prompt and it should work just fine.
 
-**To install it as an NPM module**, you can run _npm install -g gh-members_. If you don't want to install it globally, omit the _-g_ option.
+**To install it as an NPM module**, you can run _npm install -g @alu0101228587/gh-members_. If you don't want to install it globally, omit the _-g_ option.
 
 
 ### **Usage**
