@@ -9,6 +9,7 @@
   "bin": {
     "gh-members": "gh-members.js"
   },
+  "keywords": ["ULL", "education", "gh-members"],
   "author": "",
   "license": "ISC",
   "dependencies": {
