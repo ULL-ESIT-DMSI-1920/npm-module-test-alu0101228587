@@ -9,7 +9,9 @@ This GitHub extension, given an owner, provides a list of members of thr organiz
 
 ### **Installation**
 
-With gh api installed, just execute _gh extension install alu0101228587/gh-members_ in your command prompt and it should work just fine.
+**With gh api installed**, just execute _gh extension install alu0101228587/gh-members_ in your command prompt and it should work just fine.
+
+**To install it as an NPM module**, you can run _npm install -g gh-members_. If you don't want to install it globally, omit the _-g_ option.
 
 
 ### **Usage**
@@ -34,6 +36,14 @@ gh members <owner>/<repository>
 ```
 
 You will be provided with a list of files and branches in the repository.
+
+### **Exported functions**
+
+You also can use this module as a library, as it is exporting two functions:
+
+* **getRepoInfo(repoDir)**: Prints a list of files and branches of a given repository direction (_owner/repo_).
+
+* **getOrgMembers(orgName, repo)**: Prints a list of members of a given organization, and if the _repo_ flag is on it also prints a list of repositories of said organization.
 
 
 ### **Special error messages**
