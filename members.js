@@ -74,13 +74,17 @@ function getRepoInfo(repoDir) {
 }
 
 function getOrgMembers(orgName, repo) {
+    var execResult = '';
+  
     console.log(`\n-- Members of ${orgName} --\n`);
-    shell.exec(`gh api graphql --paginate -f query='${getMemberList(orgName)}' --jq ".data.organization.membersWithRole.nodes.[].name"`);
+    execResult += shell.exec(`gh api graphql --paginate -f query='${getMemberList(orgName)}' --jq ".data.organization.membersWithRole.nodes.[].name"`).stdout;
 
     if (repo) {
         console.log(`\n-- Repositories of ${orgName} --\n`);
-        shell.exec(`gh api graphql --paginate -f query='${getRepoList(orgName)}' --jq ".data.organization.repositories.nodes.[].name"`);
+        execResult += shell.exec(`gh api graphql --paginate -f query='${getRepoList(orgName)}' --jq ".data.organization.repositories.nodes.[].name"`).stdout;
     }
+
+    return execResult;
 }
 
 module.exports = {
