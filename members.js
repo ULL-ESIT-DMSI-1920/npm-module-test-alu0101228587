@@ -2,7 +2,10 @@
 
 const shell = require('shelljs');
 
-//  List of members by owner
+/** 
+ * List of members by owner
+ * @param {string} owner - GitHub Organization
+*/
 const getMemberList = (owner) => `
 query {
   organization(login: "${owner}") {
@@ -15,7 +18,10 @@ query {
 }
 `;
 
-//  List if repositories by owner
+/** 
+ * List of repositories by owner
+ * @param {string} owner - GitHub Organization
+*/
 const getRepoList = (owner) => `
 query {
   organization(login: "${owner}") {
@@ -28,7 +34,11 @@ query {
 }
 `;
 
-//  List of files by repository
+/** 
+ * List of files by repository
+ * @param {string} owner - GitHub Organization
+ * @param {string} repo - Repository name
+*/
 const getRepoContent = (owner, repo) => `
 query {
   repository(owner: "${owner}", name: "${repo}") {
@@ -43,7 +53,12 @@ query {
 }
 `;
 
-//  List of branches by repository
+
+/** 
+ * List of branches by repository
+ * @param {string} owner - GitHub Organization
+ * @param {string} repo - Repository name
+*/
 const getRepoBranches = (owner, repo) => `
 query {
   repository(owner: "${owner}", name: "${repo}") {
@@ -56,8 +71,10 @@ query {
 }
 `;
 
-// Uses all repository related queries above
-// and returns a lot of repo info.
+/** 
+ * Uses all repository related queries above and returns a lot of repo info
+ * @param {string} repoDir - Owner/Name
+*/
 function getRepoInfo(repoDir) {
     var owner = repoDir.split("/")[0];
 	var repoName = repoDir.split("/")[1];
@@ -73,6 +90,11 @@ function getRepoInfo(repoDir) {
 	shell.exit(0);
 }
 
+/** 
+ * Returns list of members. If repo != null also a list of repositories
+ * @param {string} orgName - Owner
+ * @param {string} repo - If != null returns repositories
+*/
 function getOrgMembers(orgName, repo) {
     var execResult = '';
   

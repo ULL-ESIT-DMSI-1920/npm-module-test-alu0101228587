@@ -1,11 +1,10 @@
 {
   "name": "@alu0101228587/gh-members",
-  "version": "1.1.2",
+  "version": "1.1.4",
   "description": "",
   "main": "gh-members.js",
   "scripts": {
     "test": "mocha --reporter spec",
-    "mocha init": "node_modules/mocha/bin/mocha init tests"
   },
   "bin": {
     "gh-members": "gh-members.js"
@@ -23,6 +22,7 @@
   },
   "devDependencies": {
     "mocha": "latest",
-    "chai": "latest"
+    "chai": "latest",
+    "jsdoc": "latest"
   }
 }
