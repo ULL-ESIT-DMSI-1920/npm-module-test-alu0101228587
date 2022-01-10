@@ -4,7 +4,9 @@
   "description": "",
   "main": "gh-members.js",
   "scripts": {
-    "test": "mocha --reporter spec"
+    "test": "npm update && npm run versions && mocha",
+    "module-version": "jq .version ../scapegoat/package.json",
+    "versions": "npm list --depth=0"
   },
   "bin": {
     "gh-members": "gh-members.js"
@@ -14,13 +16,18 @@
     "education",
     "gh-members"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ULL-ESIT-DSI-1617/gh-cli-graphql-jaimeSimeon-palomar-blumenthal.git"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "commander": "^8.3.0",
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.5"
   },
   "devDependencies": {
+    "@alu0101228587/gh-members": "latest",
     "mocha": "latest",
     "chai": "latest",
     "jsdoc": "latest"
