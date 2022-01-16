@@ -1,6 +1,7 @@
 name: repo-rename.js Package
 
 on:
+  workflow_dispatch
   push:
     branches: [ main ]
   pull_request:
