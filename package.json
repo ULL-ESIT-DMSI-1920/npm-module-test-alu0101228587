@@ -28,8 +28,8 @@
   },
   "devDependencies": {
     "@alu0101228587/gh-members": "latest",
-    "mocha": "latest",
     "chai": "latest",
-    "jsdoc": "latest"
+    "jsdoc": "latest",
+    "mocha": "^9.1.4"
   }
 }
